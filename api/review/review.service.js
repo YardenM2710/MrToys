@@ -51,7 +51,6 @@ async function query(filterBy = {}) {
 
     // return review
     // })
-    console.log('REVIEWS', collection)
 
     return reviews
   } catch (err) {
