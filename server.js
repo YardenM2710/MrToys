@@ -21,7 +21,21 @@ const userRoutes = require('./api/user/user.routes')
 const reviewRoutes = require('./api/review/review.routes')
 const toyRoutes = require('./api/toys/toy.routes')
 const { connectSockets } = require('./services/socket.service')
-app.use(express.static(path.resolve(__dirname, 'public')))
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.resolve(__dirname, 'public')))
+} else {
+  app.use(express.static(path.resolve(__dirname, 'public')))
+  const corsOptions = {
+    origin: [
+      'http://127.0.0.1:8080',
+      'http://localhost:8080',
+      'http://127.0.0.1:3000',
+      'http://localhost:3000',
+    ],
+    credentials: true,
+  }
+  app.use(cors(corsOptions))
+}
 
 // routes
 const setupAsyncLocalStorage = require('./middlewares/setupAls.middleware')
@@ -38,22 +52,6 @@ connectSockets(http, session)
 app.get('/**', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
-
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.resolve(__dirname, 'public')))
-// } else {
-//   app.use(express.static(path.resolve(__dirname, 'public')))
-//   const corsOptions = {
-//     origin: [
-//       'http://127.0.0.1:8080',
-//       'http://localhost:8080',
-//       'http://127.0.0.1:3000',
-//       'http://localhost:3000',
-//     ],
-//     credentials: true,
-//   }
-//   app.use(cors(corsOptions))
-// }
 
 const logger = require('./services/logger.service')
 const port = process.env.PORT || 3030
