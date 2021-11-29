@@ -21,6 +21,7 @@ const userRoutes = require('./api/user/user.routes')
 const reviewRoutes = require('./api/review/review.routes')
 const toyRoutes = require('./api/toys/toy.routes')
 const { connectSockets } = require('./services/socket.service')
+app.use(express.static(path.resolve(__dirname, 'public')))
 
 // routes
 const setupAsyncLocalStorage = require('./middlewares/setupAls.middleware')
@@ -31,7 +32,6 @@ app.use('/api/user', userRoutes)
 app.use('/api/toy', toyRoutes)
 app.use('/api/review', reviewRoutes)
 connectSockets(http, session)
-app.use(express.static(path.resolve(__dirname, 'public')))
 // Make every server-side-route to match the index.html
 // so when requesting http://localhost:3030/index.html/car/123 it will still respond with
 // our SPA (single page app) (the index.html file) and allow vue/react-router to take it from there
